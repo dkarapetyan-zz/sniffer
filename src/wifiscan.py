@@ -6,7 +6,7 @@ PROBE_REQUEST_SUBTYPE = 4
 ap_list = []
 
 
-def PacketHandler(pkt):
+def packet_handler(pkt):
     if pkt.haslayer(Dot11):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
@@ -18,7 +18,7 @@ def PacketHandler(pkt):
 def main():
     from datetime import datetime
     print("[%s] Starting scan" % datetime.now())
-    sniff(iface="mon0", prn=PacketHandler)
+    sniff(iface="mon0", prn=packet_handler)
 
 
 if __name__ == "__main__":
