@@ -18,7 +18,7 @@ def packet_handler(pkt):
 def main():
     from datetime import datetime
     print("[%s] Starting scan" % datetime.now())
-    sniff(iface="mon0", prn=packet_handler)
+    sniff(iface="wlan0", prn=packet_handler)
 
 
 if __name__ == "__main__":
