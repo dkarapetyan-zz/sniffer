@@ -17,8 +17,6 @@ def packet_handler(pkt):
                 PROBE_REQUEST_SUBTYPE:
             new_info_dict = {'index': now, 'addr': pkt.addr2, 'info': pkt.info}
             base_dict.update(new_info_dict)
-            write_dicts()
-
             print("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
 
 
