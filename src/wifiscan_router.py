@@ -34,6 +34,7 @@ def things_to_be_written():
 def main():
     from datetime import datetime
     print("[%s] Starting scan" % datetime.now())
+    write_dicts()
     sniff(iface="wlan0", prn=packet_handler)
 
 
