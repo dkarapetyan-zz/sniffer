@@ -27,7 +27,7 @@ def write_dict(list_to_write):
         keys = list_to_write[0].keys()
         w = csv.DictWriter(file, keys)
         w.writeheader()
-        w.writerow(list_to_write)
+        w.writerows(list_to_write)
 
 
 def main():
