@@ -20,19 +20,17 @@ def packet_handler(pkt):
             print("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
 
 
-def write_dicts():
-    threading.Timer(900, things_to_be_written)
-
-
-def things_to_be_written():
-    with open("all_info.csv", 'w') as file:
-        json.dump(base_dict, file)
+def write_dict(dict_to_write):
+    with open("/root/all_info.csv", 'w') as file:
+        print("Writing results to file.")
+        json.dump(dict_to_write, file)
 
 
 def main():
     from datetime import datetime
     print("[%s] Starting scan" % datetime.now())
-    write_dicts()
+    writer = threading.Timer(900, write_dict, [base_dict])
+    writer.start()
     sniff(iface="wlan0", prn=packet_handler)
 
 
