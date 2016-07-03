@@ -7,7 +7,7 @@ import logging.config
 from scapy.layers.dot11 import Dot11
 from scapy.sendrecv import sniff
 
-from .logging_config import lcfg
+from logging_config import lcfg
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
@@ -38,8 +38,7 @@ def write_dict(list_to_write):
 
 
 def main():
-    from datetime import datetime
-    logging.info("[%s] Starting scan" % datetime.now())
+    logging.info("Starting scan")
     writer = threading.Timer(900, write_dict, [base_list])
     writer.start()
     sniff(iface="wlan0", prn=packet_handler)
