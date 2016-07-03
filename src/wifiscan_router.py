@@ -7,7 +7,7 @@ import logging.config
 from scapy.layers.dot11 import Dot11
 from scapy.sendrecv import sniff
 
-from logging_config import lcfg
+from .logging_config import lcfg
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
