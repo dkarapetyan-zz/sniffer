@@ -11,10 +11,11 @@ from logging_config import lcfg
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
-base_list = []
 
 logging.config.dictConfig(lcfg)
 logger = logging.getLogger()
+
+base_list = []
 
 
 def packet_handler(pkt):
