@@ -1,4 +1,0 @@
-scapy
-pcapy
-pyx=0.12.1
-pip install -e http://prdownloads.sourceforge.net/gnuplot-py/gnuplot-py-1.8.tar.gz\?download
