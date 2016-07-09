@@ -1,4 +1,3 @@
-import threading
 import datetime
 import csv
 import logging
@@ -43,7 +42,3 @@ def main():
     # writer = threading.Timer(900, write_dict, [base_list])
     # writer.start()
     sniff(iface="wlan0", prn=packet_handler)
-
-
-if __name__ == "__main__":
-    main()
