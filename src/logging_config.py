@@ -44,7 +44,6 @@ lcfg = {
         },
         'sys': {
             'class': 'logging.handlers.SysLogHandler',
-            'address': '/dev/log',
             'formatter': 'simple',
             'level': 'DEBUG',
         }

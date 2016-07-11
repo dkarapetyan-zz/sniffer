@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import csv
 import logging
 import logging.config
@@ -17,8 +17,9 @@ logger = logging.getLogger()
 base_list = []
 
 
+
 def packet_handler(pkt):
-    now = datetime.datetime.utcnow()
+    # now = datetime.datetime.utcnow()
     if pkt.haslayer(Dot11):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
@@ -37,8 +38,8 @@ def write_dict(list_to_write):
         w.writerows(list_to_write)
 
 
-def main():
+def main(the_device):
     logging.info("Starting scan")
     # writer = threading.Timer(900, write_dict, [base_list])
     # writer.start()
-    sniff(iface="wlan0", prn=packet_handler)
+    sniff(iface=the_device, prn=packet_handler)
