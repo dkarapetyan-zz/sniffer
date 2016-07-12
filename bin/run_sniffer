@@ -2,7 +2,7 @@
 # coding=utf-8
 import argparse
 
-from src.wifiscan_router import main
+from src.wifiscan import main
 
 parser = argparse.ArgumentParser(description="Take device input")
 parser.add_argument('--device', type=str, help="The device name",
