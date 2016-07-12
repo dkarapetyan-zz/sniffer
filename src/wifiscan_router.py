@@ -1,7 +1,8 @@
-# import datetime
 import csv
+import datetime
 import logging
 import logging.config
+import threading
 
 from scapy.layers.dot11 import Dot11
 from scapy.sendrecv import sniff
@@ -17,15 +18,14 @@ logger = logging.getLogger()
 base_list = []
 
 
-
 def packet_handler(pkt):
-    # now = datetime.datetime.utcnow()
+    now = datetime.datetime.utcnow()
     if pkt.haslayer(Dot11):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
-            # new_info_list = [
-            #     {'index': now, 'addr': pkt.addr2, 'info': pkt.info}]
-            # base_list.extend(new_info_list)
+            new_info_list = [
+                {'index': now, 'addr': pkt.addr2, 'info': pkt.info}]
+            base_list.extend(new_info_list)
             logging.info("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
 
 
@@ -40,6 +40,6 @@ def write_dict(list_to_write):
 
 def main(the_device):
     logging.info("Starting scan")
-    # writer = threading.Timer(900, write_dict, [base_list])
-    # writer.start()
+    writer = threading.Timer(900, write_dict, [base_list])
+    writer.start()
     sniff(iface=the_device, prn=packet_handler)
