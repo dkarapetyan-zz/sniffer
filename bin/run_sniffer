@@ -6,7 +6,7 @@ from src.wifiscan import main
 
 parser = argparse.ArgumentParser(description="Take device input")
 parser.add_argument('--device', type=str, help="The device name",
-                    default='wlan0')
+                    default='wlan1')
 args = parser.parse_args()
 
 main(args.device)
