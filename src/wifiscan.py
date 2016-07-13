@@ -26,6 +26,7 @@ def packet_handler(pkt):
                 PROBE_REQUEST_SUBTYPE:
             new_info_df = pd.DataFrame(
                 data={'addr': pkt.addr2, 'info': pkt.info}, index=[now])
+            new_info_df.index.name = 'index'
             global base_df
             base_df = base_df.append(new_info_df)
             logging.info("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
@@ -46,12 +47,25 @@ def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
         if not os.path.exists(base_dir):
             os.makedirs(base_dir)
         global base_df
-        logging.info("Writing to file.")
-        base_df.to_csv(base_dir + "all_info.csv", mode='a', header=False)
         occupancy_ts = pd.Series(data=occupancy_counter(base_df),
                                  index=[now])
-        occupancy_ts.to_csv(base_dir + "occupancy.csv", mode='a',
-                            header=False)
+        occupancy_ts.index.name = 'index'
+        logging.info("Writing to file.")
+        all_info_file = base_dir + "all_info.csv"
+        occupancy_file = base_dir + "occupancy.csv"
+
+        files = [all_info_file, occupancy_file]
+
+        for fp in files:
+            if not os.path.isfile(fp):
+                base_df.to_csv(fp, mode='w', header=True)
+                occupancy_ts.to_csv(fp, mode='w',
+                                    header=True)
+            else:
+                base_df.to_csv(fp, mode='a', header=False)
+                occupancy_ts.to_csv(fp, mode='a',
+                                    header=False)
+
         base_df = pd.DataFrame()
         t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
         t.start()
