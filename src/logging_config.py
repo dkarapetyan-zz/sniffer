@@ -1,6 +1,6 @@
 import os
 
-log_dir = os.path.expanduser('~/pi/.sniffer/logs')
+log_dir = os.path.expanduser('~pi/.sniffer/logs')
 log_file = log_dir + "sniffer.log"
 
 # if directory doesn't exist, create it
