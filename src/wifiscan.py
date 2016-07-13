@@ -36,8 +36,8 @@ def packet_handler(pkt):
 def occupancy_counter(df=pd.DataFrame()):
     now = datetime.datetime.utcnow()
     past = now - datetime.timedelta(minutes=15)
-    range = logical_and(df.index >= past, df.index <= now)
-    df_subset = df[range]
+    time_range = logical_and(df.index >= past, df.index <= now)
+    df_subset = df[time_range]
     df_subset = df_subset.drop_duplicates()
     return len(df_subset)
 
@@ -47,13 +47,15 @@ def things_to_be_written():
     global occupancy_series
     logging.info("Writing to file.")
     base_df.to_csv("all_info.csv", mode='a', header=False)
-    occupancy_series.to_csv("occupancy.csv", mode='a', header=False)
+    occ_final_reading = occupancy_series.tail(1)
+    occ_final_reading.to_csv("occupancy.csv", mode='a', header=False)
     base_df = pd.DataFrame()
     occupancy_series = pd.Series()
+    t = threading.Timer(60, things_to_be_written)
+    t.start()
 
 
 def main(the_device):
     logging.info("Starting scan")
-    timer = threading.Timer(100, things_to_be_written)
-    timer.start()
+    things_to_be_written()
     sniff(iface=the_device, prn=packet_handler, store=0)
