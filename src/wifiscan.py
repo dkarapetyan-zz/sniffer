@@ -43,12 +43,17 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def things_to_be_written():
-    base_df.to_csv("all_info.csv")
-    occupancy_series.to_csv("occupancy.csv")
+    global base_df
+    global occupancy_series
+    logging.info("Writing to file.")
+    base_df.to_csv("all_info.csv", mode='a', header=False)
+    occupancy_series.to_csv("occupancy.csv", mode='a', header=False)
+    base_df = pd.DataFrame()
+    occupancy_series = pd.Series()
 
 
 def main(the_device):
     logging.info("Starting scan")
     timer = threading.Timer(100, things_to_be_written)
     timer.start()
-    sniff(iface=the_device, prn=packet_handler)
+    sniff(iface=the_device, prn=packet_handler, store=0)
