@@ -1,5 +1,6 @@
 import datetime
 import logging.config
+import os
 import threading
 
 import pandas as pd
@@ -43,17 +44,24 @@ def occupancy_counter(df=pd.DataFrame()):
     return len(df_subset)
 
 
-def things_to_be_written():
-    global base_df
-    global occupancy_series
-    logging.info("Writing to file.")
-    base_df.to_csv("all_info.csv", mode='a', header=False)
-    occ_final_reading = occupancy_series.tail(1)
-    occ_final_reading.to_csv("occupancy.csv", mode='a', header=False)
-    base_df = pd.DataFrame()
-    occupancy_series = pd.Series()
-    t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
-    t.start()
+def things_to_be_written(base_dir=os.path.expanduser("~/.sniffer/csvs/")):
+    try:
+        if not os.path.exists(base_dir):
+            os.makedirs(base_dir)
+        global base_df
+        global occupancy_series
+        logging.info("Writing to file.")
+        base_df.to_csv(base_dir + "all_info.csv", mode='a', header=False)
+        occ_final_reading = occupancy_series.tail(1)
+        occ_final_reading.to_csv(base_dir + "occupancy.csv", mode='a',
+                                 header=False)
+        base_df = pd.DataFrame()
+        occupancy_series = pd.Series()
+        t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
+        t.start()
+    except (RuntimeError, TypeError, NameError) as e:
+        logger.critical("Failed to write some results to disk.")
+        raise e
 
 
 def main(the_device):

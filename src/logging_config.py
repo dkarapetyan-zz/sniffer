@@ -1,7 +1,7 @@
 import os
 
-log_dir = os.path.expanduser('~') + "/logs/"
-log_file = log_dir + "occupancy_sniff.log"
+log_dir = os.path.expanduser('~/.sniffer/logs')
+log_file = log_dir + "sniffer.log"
 
 # if directory doesn't exist, create it
 if not os.path.isdir(log_dir):
@@ -21,7 +21,7 @@ lcfg = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
-            'level': 'DEBUG',
+            'level': 'INFO',
             'stream': 'ext://sys.stdout'
         },
         'file': {
@@ -50,7 +50,7 @@ lcfg = {
     },
     'root': {
         'handlers': ['console', 'file', 'sys'],
-        'level': 'INFO'
+        'level': 'DEBUG'
     }
     # custom loggers, which will be child objects of root logger defined above
     # 'loggers': {
