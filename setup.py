@@ -18,7 +18,7 @@ pkgs = find_packages(exclude=["tests"])
 # can list packages with subpackages explicitly later
 setup(
     name='sniffer',
-    version='0.0',
+    version='0.1',
     packages=pkgs,
     url='http://davidkarapetyan.com',
     license='Proprietary',
