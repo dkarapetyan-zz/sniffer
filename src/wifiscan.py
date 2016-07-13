@@ -8,6 +8,7 @@ from scapy.layers.dot11 import Dot11
 from scapy.sendrecv import sniff
 
 from logging_config import lcfg
+from model_config import ModelConfig
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
@@ -35,7 +36,7 @@ def packet_handler(pkt):
 
 def occupancy_counter(df=pd.DataFrame()):
     now = datetime.datetime.utcnow()
-    past = now - datetime.timedelta(minutes=15)
+    past = now - datetime.timedelta(minutes=ModelConfig.granularity)
     time_range = logical_and(df.index >= past, df.index <= now)
     df_subset = df[time_range]
     df_subset = df_subset.drop_duplicates()
@@ -51,7 +52,7 @@ def things_to_be_written():
     occ_final_reading.to_csv("occupancy.csv", mode='a', header=False)
     base_df = pd.DataFrame()
     occupancy_series = pd.Series()
-    t = threading.Timer(60, things_to_be_written)
+    t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
     t.start()
 
 
