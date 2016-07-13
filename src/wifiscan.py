@@ -44,7 +44,9 @@ def occupancy_counter(df=pd.DataFrame()):
     return len(df_subset)
 
 
-def things_to_be_written(base_dir=os.path.expanduser("~/.sniffer/csvs/")):
+def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
+    import ipdb
+    ipdb.set_trace()
     try:
         if not os.path.exists(base_dir):
             os.makedirs(base_dir)
