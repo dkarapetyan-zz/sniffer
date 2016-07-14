@@ -13,7 +13,7 @@ from model_config import ModelConfig
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
-cols_in_pkt = ['addr', 'info']
+cols_in_pkt = ['mac', 'ssid']
 base_df = pd.DataFrame(columns=cols_in_pkt)
 
 logging.config.dictConfig(lcfg)
@@ -26,10 +26,10 @@ def packet_handler(pkt):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
             new_info_df = pd.DataFrame(
-                data={'addr': pkt.addr2, 'info': pkt.info}, index=[now])
+                data={'mac': pkt.mac2, 'ssid': pkt.info}, index=[now])
             global base_df
             base_df = base_df.append(new_info_df)
-            logging.info("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
+            logging.info("AP MAC: %s with SSID: %s " % (pkt.mac2, pkt.info))
 
 
 def occupancy_counter(df=pd.DataFrame()):
