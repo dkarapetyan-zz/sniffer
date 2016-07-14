@@ -42,17 +42,19 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
+    t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
+    t.start()
     global base_df
-
     if len(base_df) == 0:
         return
     try:
         now = datetime.datetime.utcnow()
         if not os.path.exists(base_dir):
             os.makedirs(base_dir)
-        occupancy_ts = pd.Series(data=occupancy_counter(base_df),
-                                 index=[now])
-        occupancy_ts.index.name = 'index'
+        occupancy_df = pd.DataFrame(
+            data={'occupancy': occupancy_counter(base_df)},
+            index=[now])
+        occupancy_df.index.name = 'index'
         logging.info("Writing to file.")
         all_info_file = base_dir + "all_info.csv"
         occupancy_file = base_dir + "occupancy.csv"
@@ -62,11 +64,11 @@ def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
         for fp in files:
             if not os.path.isfile(fp):
                 base_df.to_csv(fp, mode='w', header=True)
-                occupancy_ts.to_csv(fp, mode='w',
+                occupancy_df.to_csv(fp, mode='w',
                                     header=True)
             else:
                 base_df.to_csv(fp, mode='a', header=False)
-                occupancy_ts.to_csv(fp, mode='a',
+                occupancy_df.to_csv(fp, mode='a',
                                     header=False)
 
         base_df = pd.DataFrame()
@@ -74,9 +76,6 @@ def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
     except (RuntimeError, TypeError, NameError) as e:
         logger.critical("Failed to write some results to disk.")
         raise e
-
-    t = threading.Timer(1 * ModelConfig.granularity, things_to_be_written)
-    t.start()
 
 
 def main(the_device):
