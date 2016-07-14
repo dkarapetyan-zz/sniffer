@@ -2,14 +2,14 @@ CREATE USER pi
 WITH PASSWORD NULL;
 
 CREATE DATABASE west_end_646
-WITH OWNER = "pi"
-ENCODING = 'UTF8';
+WITH OWNER pi
+ENCODING 'UTF8';
 
 
 \connect west_end_646;
 
 CREATE SCHEMA occupancy_schema
-  AUTHORIZATION "pi"
+  AUTHORIZATION pi
   CREATE TABLE occupancy
   (
     date      DATE NOT NULL,
