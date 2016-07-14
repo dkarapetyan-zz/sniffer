@@ -42,11 +42,14 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
+    global base_df
+
+    if len(base_df) == 0:
+        return
     try:
         now = datetime.datetime.utcnow()
         if not os.path.exists(base_dir):
             os.makedirs(base_dir)
-        global base_df
         occupancy_ts = pd.Series(data=occupancy_counter(base_df),
                                  index=[now])
         occupancy_ts.index.name = 'index'
@@ -67,11 +70,13 @@ def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
                                     header=False)
 
         base_df = pd.DataFrame()
-        t = threading.Timer(60 * ModelConfig.granularity, things_to_be_written)
-        t.start()
+
     except (RuntimeError, TypeError, NameError) as e:
         logger.critical("Failed to write some results to disk.")
         raise e
+
+    t = threading.Timer(1 * ModelConfig.granularity, things_to_be_written)
+    t.start()
 
 
 def main(the_device):
