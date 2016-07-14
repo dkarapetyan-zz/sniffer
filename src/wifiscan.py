@@ -13,7 +13,8 @@ from model_config import ModelConfig
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
-base_df = pd.DataFrame()
+cols_in_pkt = ['addr', 'info']
+base_df = pd.DataFrame(columns=cols_in_pkt)
 
 logging.config.dictConfig(lcfg)
 logger = logging.getLogger()
@@ -56,22 +57,20 @@ def things_to_be_written(base_dir=os.path.expanduser("~pi/.sniffer/csvs/")):
             index=[now])
         occupancy_df.index.name = 'index'
         logging.info("Writing to file.")
+
         all_info_file = base_dir + "all_info.csv"
         occupancy_file = base_dir + "occupancy.csv"
 
         files = [all_info_file, occupancy_file]
+        dfs = [base_df, occupancy_df]
 
-        for fp in files:
+        for df, fp in zip(dfs, files):
             if not os.path.isfile(fp):
-                base_df.to_csv(fp, mode='w', header=True)
-                occupancy_df.to_csv(fp, mode='w',
-                                    header=True)
+                df.to_csv(fp, mode='w', header=True)
             else:
-                base_df.to_csv(fp, mode='a', header=False)
-                occupancy_df.to_csv(fp, mode='a',
-                                    header=False)
+                df.to_csv(fp, mode='a', header=False)
 
-        base_df = pd.DataFrame()
+        base_df = pd.DataFrame(columns=cols_in_pkt)
 
     except (RuntimeError, TypeError, NameError) as e:
         logger.critical("Failed to write some results to disk.")
