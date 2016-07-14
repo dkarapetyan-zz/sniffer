@@ -5,7 +5,6 @@ CREATE DATABASE west_end_646
 WITH OWNER = "pi"
 ENCODING = 'UTF8';
 
--- GRANT ALL PRIVILEGES ON DATABASE west_end_646 TO pi;
 
 \connect west_end_646;
 
