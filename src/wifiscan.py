@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from logging_config import lcfg
 from model_config import ModelConfig
 
-engine = create_engine('postgresql://pi@74.71.229.106:5432/west_end_646')
+engine = create_engine('postgresql://postgres@74.71.229.106:5432/west_end_646')
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
 cols_in_pkt = ['mac', 'ssid']
@@ -58,9 +58,9 @@ def things_to_be_written():
         tables = ["all_info", "occupancy"]
         dfs = [base_df, occupancy_df]
 
-        for df, fp in zip(dfs, tables):
-            df.to_sql(fp, con=engine, schema='occupancy_schema',
-                      if_exists='append', index=True)
+        for df, table in zip(dfs, tables):
+            df.to_sql(table, con=engine, schema='occupancy_schema',
+                      if_exists='append', index=True, index_label='datetime')
 
         base_df = pd.DataFrame(columns=cols_in_pkt)
 

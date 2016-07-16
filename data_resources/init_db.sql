@@ -1,25 +1,24 @@
-CREATE USER pi
-WITH PASSWORD NULL;
+-- CREATE USER pi
+-- WITH PASSWORD NULL;
 
 CREATE DATABASE west_end_646
-WITH OWNER pi
+WITH OWNER postgres
 ENCODING 'UTF8';
 
-
-\connect west_end_646;
+\c west_end_646;
 
 CREATE SCHEMA occupancy_schema
-  AUTHORIZATION pi
+  AUTHORIZATION postgres
   CREATE TABLE occupancy
   (
-    date      DATE NOT NULL,
+    datetime  TIMESTAMPTZ NOT NULL,
     occupancy INT
   )
   CREATE TABLE all_info
   (
-    date DATE NOT NULL,
-    mac  CHAR(17),
-    ssid VARCHAR(64)
+    datetime TIMESTAMPTZ NOT NULL,
+    mac      CHAR(17),
+    ssid     VARCHAR(64)
   );
 
 
