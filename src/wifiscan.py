@@ -9,9 +9,9 @@ from scapy.sendrecv import sniff
 from sqlalchemy import create_engine
 
 from logging_config import lcfg
-from model_config import ModelConfig
+from model_config import ModelConfig, DBConfig
 
-engine = create_engine('postgresql://postgres@74.71.229.106:5432/west_end_646')
+engine = create_engine(DBConfig.engine)
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
 cols_in_pkt = ['mac', 'ssid']
@@ -27,7 +27,8 @@ def packet_handler(pkt):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
             new_info_df = pd.DataFrame(
-                data={'mac': pkt.addr2, 'ssid': pkt.info}, index=[now])
+                data={cols_in_pkt[0]: pkt.addr2, cols_in_pkt[1]: pkt.info},
+                index=[now])
             global base_df
             base_df = base_df.append(new_info_df)
             logging.info("AP MAC: %s with SSID: %s " % (pkt.addr2, pkt.info))
