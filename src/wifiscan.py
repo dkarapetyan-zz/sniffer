@@ -14,8 +14,7 @@ from model_config import ModelConfig, DBConfig
 engine = create_engine(DBConfig.engine)
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
-cols_in_pkt = ['mac', 'ssid']
-base_df = pd.DataFrame(columns=cols_in_pkt)
+base_df = pd.DataFrame()
 
 logging.config.dictConfig(lcfg)
 logger = logging.getLogger()
@@ -27,7 +26,7 @@ def packet_handler(pkt):
         if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
                 PROBE_REQUEST_SUBTYPE:
             new_info_df = pd.DataFrame(
-                data={cols_in_pkt[0]: pkt.addr2, cols_in_pkt[1]: pkt.info},
+                data=[pkt.addr2, pkt.info],
                 index=[now])
             global base_df
             base_df = base_df.append(new_info_df)
@@ -63,7 +62,7 @@ def things_to_be_written():
             df.to_sql(table, con=engine, schema='occupancy_schema',
                       if_exists='append', index=True, index_label='datetime')
 
-        base_df = pd.DataFrame(columns=cols_in_pkt)
+        base_df = pd.DataFrame()
 
     except (RuntimeError, TypeError, NameError) as e:
         logger.critical("Failed to append some results to DB.")
