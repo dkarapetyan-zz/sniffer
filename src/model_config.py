@@ -1,6 +1,8 @@
 # coding=utf-8
 import os
 
+from sqlalchemy import create_engine
+
 
 class ModelConfig:
     def __init__(self):
@@ -15,8 +17,11 @@ class ModelConfig:
 
 
 class DBConfig:
-    def __init__(self):
-        pass
+    def __init__(self, client):
+        self.client_db_name = client
+        self.engine = create_engine(
+            'postgresql://{}@{}:{}/{}'.format(self.username, self.host,
+                                              self.port, self.client_db_name))
 
     host = os.environ.get('SQL_HOST')
     port = int(os.environ.get('SQL_PORT'))
@@ -26,8 +31,3 @@ class DBConfig:
     weather_db_name = 'weather'
     weather_history_collection_name = 'history'
     weather_forecast_collection_name = 'forecast'
-    client_db_name = 'west_end_646'
-    client_table_name = {'occupancy': 'occupancy'}
-    engine = 'postgresql://{}@{}:{}/{}'.format(username, host, port,
-                                               client_table_name.get(
-                                                   'occupancy'))

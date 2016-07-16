@@ -6,4 +6,4 @@ python-sqlalchemy python-psycopg2
 
 sudo chsh -s /bin/zsh
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"

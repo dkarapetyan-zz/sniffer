@@ -11,14 +11,13 @@ CREATE SCHEMA occupancy_schema
   AUTHORIZATION postgres
   CREATE TABLE occupancy
   (
-    datetime  TIMESTAMPTZ NOT NULL,
+    datetime  TIMESTAMPTZ NOT NULL PRIMARY KEY,
     occupancy INT
   )
   CREATE TABLE all_info
   (
-    datetime TIMESTAMPTZ NOT NULL,
-    mac      CHAR(17),
-    ssid     VARCHAR(64)
+    datetime TIMESTAMPTZ NOT NULL PRIMARY KEY,
+    mac      CHAR(17)
   );
 
 
