@@ -36,7 +36,6 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def things_to_be_written():
-    db_config_init = DBConfig('west_end_646')
     global base_df
     if len(base_df) != 0:
         try:
@@ -44,17 +43,16 @@ def things_to_be_written():
             occupancy_df = pd.DataFrame(
                 data={'occupancy': occupancy_counter(base_df)},
                 index=[now])
-            logging.info("Writing to DB.")
 
             tables = ["all_info", "occupancy"]
             dfs = [base_df, occupancy_df]
-
+            db_config_init = DBConfig('west_end_646')
             for df, table in zip(dfs, tables):
                 df.to_sql(table, con=db_config_init.engine,
                           schema='occupancy_schema',
                           if_exists='append', index=True,
                           index_label='datetime')
-
+                logging.info("Appended to {} table".format(table))
             base_df = pd.DataFrame()
 
         except Exception:
@@ -63,7 +61,7 @@ def things_to_be_written():
 
 
 def main(the_device):
-    logging.info("Starting scan")
-    t = threading.Timer(ModelConfig.gran, things_to_be_written)
+    t = threading.Timer(ModelConfig.gran_seconds, things_to_be_written)
     t.start()
+    logging.info("Starting scan")
     sniff(iface=the_device, prn=packet_handler, store=0)
