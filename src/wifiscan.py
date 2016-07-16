@@ -38,35 +38,32 @@ def occupancy_counter(df=pd.DataFrame()):
 def things_to_be_written():
     db_config_init = DBConfig('west_end_646')
     global base_df
-    if len(base_df) == 0:
-        return
-    try:
-        now = datetime.datetime.utcnow()
-        occupancy_df = pd.DataFrame(
-            data={'occupancy': occupancy_counter(base_df)},
-            index=[now])
-        logging.info("Writing to DB.")
+    if len(base_df) != 0:
+        try:
+            now = datetime.datetime.utcnow()
+            occupancy_df = pd.DataFrame(
+                data={'occupancy': occupancy_counter(base_df)},
+                index=[now])
+            logging.info("Writing to DB.")
 
-        tables = ["all_info", "occupancy"]
-        dfs = [base_df, occupancy_df]
-        import ipdb
-        ipdb.set_trace()
+            tables = ["all_info", "occupancy"]
+            dfs = [base_df, occupancy_df]
 
-        for df, table in zip(dfs, tables):
-            df.to_sql(table, con=db_config_init.engine,
-                      schema='occupancy_schema',
-                      if_exists='append', index=True, index_label='datetime')
+            for df, table in zip(dfs, tables):
+                df.to_sql(table, con=db_config_init.engine,
+                          schema='occupancy_schema',
+                          if_exists='append', index=True,
+                          index_label='datetime')
 
-        base_df = pd.DataFrame()
+            base_df = pd.DataFrame()
 
-    except Exception:
-        logger.critical("Failed to append some results to DB.")
-        raise
-    t = threading.Timer(ModelConfig.granularity, things_to_be_written)
-    t.start()
+        except Exception:
+            logger.critical("Failed to append some results to DB.")
+            raise
 
 
 def main(the_device):
     logging.info("Starting scan")
-    things_to_be_written()
+    t = threading.Timer(ModelConfig.gran, things_to_be_written)
+    t.start()
     sniff(iface=the_device, prn=packet_handler, store=0)
