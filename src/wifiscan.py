@@ -15,19 +15,21 @@ base_df = pd.DataFrame()
 
 logging.config.dictConfig(lcfg)
 logger = logging.getLogger()
+db_config_init = DBConfig('west_end_646')
 
 
 def packet_handler(pkt):
     now = datetime.datetime.utcnow()
-    if pkt.haslayer(Dot11):
-        if pkt.type == PROBE_REQUEST_TYPE and pkt.subtype == \
-                PROBE_REQUEST_SUBTYPE and pkt.info == '':
-            new_info_df = pd.DataFrame(
-                data={'mac': pkt.addr2},
-                index=[now])
-            global base_df
-            base_df = base_df.append(new_info_df)
-            logging.info("AP MAC: %s " % pkt.addr2)
+    if pkt.haslayer(Dot11) and pkt.type == PROBE_REQUEST_TYPE and pkt.subtype \
+            == PROBE_REQUEST_SUBTYPE and pkt.info == '':
+        new_info_df = pd.DataFrame(
+            data={'mac': pkt.addr2},
+            index=[now])
+        new_info_df.to_sql("all_info", con=db_config_init.engine,
+                           schema='occupancy_schema',
+                           if_exists='append', index=True,
+                           index_label='datetime')
+        logging.info("AP MAC: %s " % pkt.addr2)
 
 
 def occupancy_counter(df=pd.DataFrame()):
@@ -35,34 +37,32 @@ def occupancy_counter(df=pd.DataFrame()):
     return len(df_subset)
 
 
-def things_to_be_written():
-    global base_df
+def occupancy_write():
+    query = "select * from occupancy_schema.all_info where datetime > " \
+            "CURRENT_TIMESTAMP - INTERVAL '{} minutes'".format(
+        ModelConfig.gran)
+    base_df = pd.read_sql(query, con=db_config_init.engine)
     if len(base_df) != 0:
         try:
             now = datetime.datetime.utcnow()
             occupancy_df = pd.DataFrame(
                 data={'occupancy': occupancy_counter(base_df)},
                 index=[now])
-
-            tables = ["all_info", "occupancy"]
-            dfs = [base_df, occupancy_df]
-            db_config_init = DBConfig('west_end_646')
-            for df, table in zip(dfs, tables):
-                df.to_sql(table, con=db_config_init.engine,
-                          schema='occupancy_schema',
-                          if_exists='append', index=True,
-                          index_label='datetime')
-                logging.info("Appended to {} table".format(table))
-            base_df = pd.DataFrame()
-
+            table = "occupancy"
+            occupancy_df.to_sql(
+                table, con=db_config_init.engine,
+                schema='occupancy_schema',
+                if_exists='append', index=True,
+                index_label='datetime')
+            logging.info("Appended to {} table".format(table))
         except Exception:
             logger.critical("Failed to append some results to DB.")
             raise
-    t = threading.Timer(ModelConfig.gran_seconds, things_to_be_written)
+    t = threading.Timer(ModelConfig.gran * 60, occupancy_write)
     t.start()
 
 
 def main(the_device):
-    things_to_be_written()
+    occupancy_write()
     logging.info("Starting scan")
     sniff(iface=the_device, prn=packet_handler, store=0)

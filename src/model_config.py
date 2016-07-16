@@ -11,7 +11,6 @@ class ModelConfig:
     # sampling stuff
     forecast_length = 24
     gran = 10  # in minutes
-    gran_seconds = gran * 60
     nary_thresh = 5
     accuracy = 1  # in minutes
     gap_threshold = 2
