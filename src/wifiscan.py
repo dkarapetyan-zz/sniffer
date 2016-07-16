@@ -58,10 +58,11 @@ def things_to_be_written():
         except Exception:
             logger.critical("Failed to append some results to DB.")
             raise
+    t = threading.Timer(ModelConfig.gran_seconds, things_to_be_written)
+    t.start()
 
 
 def main(the_device):
-    t = threading.Timer(ModelConfig.gran_seconds, things_to_be_written)
-    t.start()
+    things_to_be_written()
     logging.info("Starting scan")
     sniff(iface=the_device, prn=packet_handler, store=0)
