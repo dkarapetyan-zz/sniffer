@@ -25,6 +25,7 @@ class DBConfig:
     weather_db_name = 'weather'
     weather_history_collection_name = 'history'
     weather_forecast_collection_name = 'forecast'
+    sniffed_table_name = 'sniffed'
 
     def __init__(self, client):
         self.schema = client
