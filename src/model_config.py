@@ -17,12 +17,6 @@ class ModelConfig:
 
 
 class DBConfig:
-    def __init__(self, client):
-        self.client_db_name = client
-        self.engine = create_engine(
-            'postgresql://{}@{}:{}/{}'.format(self.username, self.host,
-                                              self.port, self.client_db_name))
-
     host = os.environ.get('SQL_HOST')
     port = int(os.environ.get('SQL_PORT'))
     source = os.environ.get('SQL_SOURCE')
@@ -31,3 +25,12 @@ class DBConfig:
     weather_db_name = 'weather'
     weather_history_collection_name = 'history'
     weather_forecast_collection_name = 'forecast'
+
+    def __init__(self, client):
+        self.schema = client
+        self.engine = create_engine(
+            'postgresql://{}:{}@{}:{}/postgres'.format(
+                self.username,
+                self.password,
+                self.host,
+                self.port))

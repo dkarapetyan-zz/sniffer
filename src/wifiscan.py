@@ -26,7 +26,7 @@ def packet_handler(pkt):
             data={'mac': pkt.addr2},
             index=[now])
         new_info_df.to_sql("all_info", con=db_config_init.engine,
-                           schema='occupancy_schema',
+                           schema=db_config_init.schema,
                            if_exists='append', index=True,
                            index_label='datetime')
         logging.info("AP MAC: %s " % pkt.addr2)
@@ -38,7 +38,7 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def occupancy_write():
-    query = "select * from occupancy_schema.all_info where datetime > " \
+    query = "select * from west_end_646.sniffed where datetime > " \
             "CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL '{} " \
             "minutes'".format(
         ModelConfig.gran)
@@ -52,7 +52,7 @@ def occupancy_write():
             table = "occupancy"
             occupancy_df.to_sql(
                 table, con=db_config_init.engine,
-                schema="occupancy_schema",
+                schema=db_config_init.schema,
                 if_exists='append', index=True,
                 index_label='datetime')
             logging.info("Appended to {} table".format(table))
