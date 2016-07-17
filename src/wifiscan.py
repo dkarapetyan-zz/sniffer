@@ -48,10 +48,10 @@ def occupancy_write():
     if len(base_df) != 0:
         try:
             now = datetime.datetime.utcnow()
+            table = db_config_init.occupancy_table_name
             occupancy_df = pd.DataFrame(
-                data={'occupancy': occupancy_counter(base_df)},
+                data={table: occupancy_counter(base_df)},
                 index=[now])
-            table = "occupancy"
             occupancy_df.to_sql(
                 table, con=db_config_init.engine,
                 schema=db_config_init.schema,
