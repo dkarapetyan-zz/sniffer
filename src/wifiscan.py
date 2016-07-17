@@ -11,8 +11,6 @@ from model_config import DBConfig, ModelConfig
 
 PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
-base_df = pd.DataFrame()
-
 logging.config.dictConfig(lcfg)
 logger = logging.getLogger()
 db_config_init = DBConfig('west_end_646')
@@ -39,14 +37,13 @@ def occupancy_counter(df=pd.DataFrame()):
 
 
 def occupancy_write():
+    # noinspection SqlResolve
     query = "select * from {}.{} where " \
             "datetime > " \
             "CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL '{} " \
             "minutes'".format(db_config_init.schema,
                               db_config_init.sniffed_table_name,
                               ModelConfig.gran)
-    import ipdb
-    ipdb.set_trace()
     base_df = pd.read_sql(query, con=db_config_init.engine)
     if len(base_df) != 0:
         try:
