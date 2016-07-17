@@ -39,7 +39,9 @@ def occupancy_counter(df=pd.DataFrame()):
 
 def occupancy_write():
     query = "select * from occupancy_schema.all_info where datetime > " \
-            "CURRENT_TIMESTAMP - INTERVAL '{} minutes'".format(ModelConfig.gran)
+            "CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL '{} " \
+            "minutes'".format(
+        ModelConfig.gran)
     base_df = pd.read_sql(query, con=db_config_init.engine)
     if len(base_df) != 0:
         try:
