@@ -31,7 +31,7 @@ def packet_handler(pkt):
         logging.info("AP MAC: %s " % pkt.addr2)
 
 
-def occupancy_counter(df=pd.DataFrame()):
+def occupancy_counter(df):
     counts_ts = getattr(df['mac'],
                         db_config_init.occupancy_table_name).value_counts()
     non_outside_ts = counts_ts[
