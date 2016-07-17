@@ -30,7 +30,7 @@ lcfg = {
             'level': 'DEBUG',
             'filename': log_file,
             'maxBytes': 1024,
-            'backupCount': 0  # grow indefinitely--can change to roll in future
+            'backupCount': 0
         },
         'timed_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
@@ -49,7 +49,7 @@ lcfg = {
         }
     },
     'root': {
-        'handlers': ['console', 'file', 'sys'],
+        'handlers': ['console', 'file'],
         'level': 'DEBUG'
     }
     # custom loggers, which will be child objects of root logger defined above
