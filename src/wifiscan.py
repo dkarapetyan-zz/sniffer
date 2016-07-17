@@ -32,8 +32,11 @@ def packet_handler(pkt):
 
 
 def occupancy_counter(df=pd.DataFrame()):
-    df_subset = df.drop_duplicates(subset='mac')
-    return len(df_subset)
+    counts_ts = getattr(df['mac'],
+                        db_config_init.occupancy_table_name).value_counts()
+    non_outside_ts = counts_ts[
+        counts_ts < counts_ts.quantile(ModelConfig.quantile_bound)]
+    return len(non_outside_ts)
 
 
 def occupancy_write():

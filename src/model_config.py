@@ -14,6 +14,7 @@ class ModelConfig:
     nary_thresh = 5
     accuracy = 1  # in minutes
     gap_threshold = 2
+    quantile_bound = .95
 
 
 class DBConfig:
