@@ -32,10 +32,11 @@ def packet_handler(pkt):
 
 
 def occupancy_counter(df):
-    counts_ts = getattr(df['mac'],
-                        db_config_init.occupancy_table_name).value_counts()
+    counts_ts = df['mac'].value_counts()
     non_outside_ts = counts_ts[
-        counts_ts < counts_ts.quantile(ModelConfig.quantile_bound)]
+        counts_ts > counts_ts.quantile(ModelConfig.quantile_bound)]
+    import ipdb
+    ipdb.set_trace()
     return len(non_outside_ts)
 
 

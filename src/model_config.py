@@ -10,11 +10,11 @@ class ModelConfig:
 
     # sampling stuff
     forecast_length = 24
-    gran = 10  # in minutes
+    gran = 15  # in minutes
     nary_thresh = 5
     accuracy = 1  # in minutes
     gap_threshold = 2
-    quantile_bound = .95
+    quantile_bound = 0.95
 
 
 class DBConfig:
