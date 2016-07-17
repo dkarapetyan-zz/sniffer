@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-sudo apt-get install python-pip gnuplot-x11 python-scapy \
-python-pcapy python-pyx tcpdump tmux git zsh python-dev  \
-python-pandas ipython python-ipdb htop postgresql \
-python-sqlalchemy python-psycopg2
+sudo apt-get install python-pip tcpdump \
+tmux git zsh python-dev htop postgresql python-psycopg2 \
+python-gnuplot python-scapy python-pyx python-crypto
 
 sudo chsh -s /bin/zsh
 
