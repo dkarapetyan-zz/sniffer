@@ -33,7 +33,7 @@ def packet_handler(pkt):
 
 
 def occupancy_counter(df=pd.DataFrame()):
-    df_subset = df.drop_duplicates()
+    df_subset = df.drop_duplicates(subset='mac')
     return len(df_subset)
 
 

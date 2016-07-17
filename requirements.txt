@@ -2,3 +2,6 @@ pgcli
 ipdb
 pandas
 sqlalchemy
+ipython
+pytz
+python-dateutil
