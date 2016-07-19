@@ -49,9 +49,9 @@ def occupancy_write():
                               db_config_init.sniffed_table_name,
                               ModelConfig.gran)
     base_df = pd.read_sql(query, con=db_config_init.engine)
-    now = base_df.index[-1]
     if len(base_df) != 0:
         try:
+            now = base_df.index[-1]
             table = db_config_init.occupancy_table_name
             occupancy_df = pd.DataFrame(
                 data={table: occupancy_counter(base_df)},
