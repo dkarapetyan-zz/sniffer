@@ -35,8 +35,6 @@ def occupancy_counter(df):
     counts_ts = df['mac'].value_counts()
     non_outside_ts = counts_ts[
         counts_ts > counts_ts.quantile(ModelConfig.quantile_bound)]
-    import ipdb
-    ipdb.set_trace()
     return len(non_outside_ts)
 
 

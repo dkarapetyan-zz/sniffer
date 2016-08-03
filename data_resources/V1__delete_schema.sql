@@ -1,1 +1,0 @@
-DROP SCHEMA west_end_646 CASCADE;
